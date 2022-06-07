@@ -1,0 +1,23 @@
+Source: droidian-encryption-service
+Priority: optional
+Maintainer: Eugenio Paolantonio (g7) <eugenio@droidian.org>
+Build-Depends: debhelper-compat (= 13),
+               libglib2.0-dev,
+               libpolkit-gobject-1-dev,
+               libcryptsetup-dev,
+               systemd,
+               meson (>= 0.53.0),
+               pkg-config,
+Standards-Version: 4.6.1.0
+Section: libs
+Homepage: https://gitlab.com/droidian/droidian-encryption-service
+Vcs-Git: https://github.com/droidian/droidian-encryption-service.git
+Vcs-Browser: https://github.com/droidian/droidian-encryption-service
+Rules-Requires-Root: no
+
+Package: droidian-encryption-service
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: Encryption service for Droidian devices
+ This service handles dm-crypt/LUKS encryption for a Droidian installation.

@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=org.droidian.EncryptionService
+Exec=/bin/false
+User=root
+SystemdService=droidian-encryption-service.service

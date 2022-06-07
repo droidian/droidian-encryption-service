@@ -1,0 +1,7 @@
+[Unit]
+Description=Encryption service for Droidian
+
+[Service]
+Type=dbus
+BusName=org.droidian.EncryptionService
+ExecStart=/usr/sbin/droidian-encryption-service

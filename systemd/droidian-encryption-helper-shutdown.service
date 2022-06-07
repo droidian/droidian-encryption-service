@@ -1,0 +1,13 @@
+[Unit]
+Description=Pauses the encryption on shutdown
+DefaultDependencies=no
+Before=shutdown.target reboot.target
+ConditionPathExists=/run/droidian-encryption-helper.pid
+
+[Service]
+Type=oneshot
+TimeoutStartSec=120
+ExecStart=/usr/sbin/droidian-encryption-helper-shutdown
+
+[Install]
+WantedBy=shutdown.target reboot.target

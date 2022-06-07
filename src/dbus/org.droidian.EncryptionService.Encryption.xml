@@ -1,0 +1,17 @@
+<node>
+  <!-- org.droidian.EncryptionService.:
+       @short_description: Display Manager DBus interface
+  -->
+
+  <interface name="org.droidian.EncryptionService.Encryption">
+    <method name="Start">
+      <arg direction="in" type="s" name="passphrase" />
+    </method>
+
+    <method name="RefreshStatus" />
+
+    <property name="Status" type="i" access="read" />
+  </interface>
+
+</node>
+
