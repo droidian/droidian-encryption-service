@@ -34,6 +34,8 @@
 #define HALIUM_MOUNTED_STAMP RUN_DIR "/" HALIUM_MOUNTED_STAMP_NAME
 #define DROIDIAN_ENCRYPTION_HELPER_PIDFILE_NAME "droidian-encryption-helper.pid"
 #define DROIDIAN_ENCRYPTION_HELPER_PIDFILE RUN_DIR "/" DROIDIAN_ENCRYPTION_HELPER_PIDFILE_NAME
+#define DROIDIAN_ENCRYPTION_HELPER_FAILURE_NAME "droidian-encryption-helper-failed"
+#define DROIDIAN_ENCRYPTION_HELPER_FAILURE RUN_DIR "/" DROIDIAN_ENCRYPTION_HELPER_FAILURE_NAME
 #define DROIDIAN_BOOT_DONE_STAMP_NAME "boot-done"
 #define DROIDIAN_BOOT_DONE_STAMP RUN_DIR "/" DROIDIAN_BOOT_DONE_STAMP_NAME
 
@@ -393,6 +395,10 @@ out:
 
       if (exit_code == EXIT_SUCCESS)
           exit_code = EXIT_FAILURE;
+
+      if (child == 0)
+          /* Create failure stamp file */
+          g_file_set_contents (DROIDIAN_ENCRYPTION_HELPER_FAILURE, error->message, -1, &error);
     }
 
   if (child == 0 && faccessat (run_fd, DROIDIAN_ENCRYPTION_HELPER_PIDFILE_NAME, F_OK, 0) == 0)
