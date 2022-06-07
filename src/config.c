@@ -26,6 +26,7 @@
 #define DEFAULT_NAME "droidian_encrypted"
 #define DEFAULT_CIPHER "aes"
 #define DEFAULT_CIPHER_MODE "xts-plain64"
+#define DEFAULT_SECTOR_SIZE 4096
 
 #define CREATE_CONFIG_GET_STRING(KEY, DEFAULT) \
   char * \
@@ -92,11 +93,12 @@ droidian_encryption_service_config_get_integer (DroidianEncryptionServiceConfig 
   return g_key_file_get_integer (self->key_file, section, key, error);
 }
 
-CREATE_CONFIG_GET_STRING (header_device, DEFAULT_HEADER);
-CREATE_CONFIG_GET_STRING (data_device, DEFAULT_DATA);
-CREATE_CONFIG_GET_STRING (mapped_name, DEFAULT_NAME);
-CREATE_CONFIG_GET_STRING (cipher, DEFAULT_CIPHER);
-CREATE_CONFIG_GET_STRING (cipher_mode, DEFAULT_CIPHER_MODE);
+CREATE_CONFIG_GET_STRING  (header_device, DEFAULT_HEADER);
+CREATE_CONFIG_GET_STRING  (data_device, DEFAULT_DATA);
+CREATE_CONFIG_GET_STRING  (mapped_name, DEFAULT_NAME);
+CREATE_CONFIG_GET_STRING  (cipher, DEFAULT_CIPHER);
+CREATE_CONFIG_GET_STRING  (cipher_mode, DEFAULT_CIPHER_MODE);
+CREATE_CONFIG_GET_INTEGER (sector_size, DEFAULT_SECTOR_SIZE);
 
 static void
 droidian_encryption_service_config_constructed (GObject *obj)
