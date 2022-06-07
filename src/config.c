@@ -41,6 +41,19 @@
     return result_string; \
   }
 
+#define CREATE_CONFIG_GET_INTEGER(KEY, DEFAULT) \
+  gint \
+  droidian_encryption_service_config_get_##KEY (DroidianEncryptionServiceConfig *self) \
+  { \
+    g_autoptr(GError) error = NULL; \
+    gint result_integer = droidian_encryption_service_config_get_integer (self, CONFIGURATION_FILE_SECTION, \
+                                                                          #KEY, &error); \
+    if (error != NULL) { \
+      g_printerr ("Unable to get key " #KEY ": %s\n", error->message); \
+      result_integer = DEFAULT; \
+    } \
+    return result_integer; \
+  }
 
 #include "config.h"
 
@@ -64,6 +77,19 @@ droidian_encryption_service_config_get_string (DroidianEncryptionServiceConfig *
     g_error ("DROIDIAN_ENCRYPTION_SERVICE_IS_CONFIG() failed");
 
   return g_key_file_get_string (self->key_file, section, key, error);
+}
+
+static gint
+droidian_encryption_service_config_get_integer (DroidianEncryptionServiceConfig *self,
+                                                const char                      *section,
+                                                const char                      *key,
+                                                GError                         **error)
+{
+  if (!DROIDIAN_ENCRYPTION_SERVICE_IS_CONFIG (self))
+    /* Programmer error */
+    g_error ("DROIDIAN_ENCRYPTION_SERVICE_IS_CONFIG() failed");
+
+  return g_key_file_get_integer (self->key_file, section, key, error);
 }
 
 CREATE_CONFIG_GET_STRING (header_device, DEFAULT_HEADER);
