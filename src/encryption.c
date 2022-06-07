@@ -27,6 +27,7 @@
 #include "dbus.h"
 
 #define DROIDIAN_ENCRYPTION_HELPER_PIDFILE "/run/droidian-encryption-helper.pid"
+#define DROIDIAN_ENCRYPTION_HELPER_FAILURE "/run/droidian-encryption-helper-failed"
 
 /* Workaround for the ancient polkit build in Debian */
 #ifndef PolkitAuthorizationResult_autoptr
@@ -266,15 +267,23 @@ handle_refresh_status (DroidianEncryptionServiceDbusEncryption *dbus_encryption,
 
   if (encryption_status == DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_CONFIGURING ||
       encryption_status == DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_CONFIGURED ||
-      encryption_status == DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_UNSUPPORTED)
+      encryption_status == DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_UNSUPPORTED ||
+      encryption_status == DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_FAILED)
 
-      /* Configuring/configured/unsupported, return last cached status */
+      /* Configuring/configured/unsupported/failed, return last cached status */
       goto cleanup;
 
   if (access (DROIDIAN_ENCRYPTION_HELPER_PIDFILE, F_OK) == 0)
     {
       /* Helper pidfile exists, assume we're in the configuring state */
       encryption_status = DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_ENCRYPTING;
+      goto save;
+    }
+
+  if (access (DROIDIAN_ENCRYPTION_HELPER_FAILURE, F_OK) == 0)
+    {
+      /* Failure flag found, signal that */
+      encryption_status = DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_FAILED;
       goto save;
     }
 
