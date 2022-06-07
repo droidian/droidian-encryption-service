@@ -19,6 +19,7 @@
 #define G_LOG_DOMAIN "droidian-encryption-service-encryption"
 
 #include <libcryptsetup.h>
+#include <libdevmapper.h>
 #include <polkit/polkit.h>
 
 #include "encryption.h"
@@ -34,6 +35,10 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (PolkitAuthorizationResult, g_object_unref)
 #ifndef PolkitSubject_autoptr
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (PolkitSubject, g_object_unref)
 #endif /* PolkitSubject_autoptr */
+
+enum {
+  DM_CRYPT_SECTOR_SIZE = 1 << 0,
+};
 
 struct _DroidianEncryptionServiceEncryption
 {
@@ -67,6 +72,46 @@ open_device (DroidianEncryptionServiceEncryption *self,
   return crypt_init (&self->crypt_device, header_path);
 }
 
+static int
+get_supported_features (void)
+{
+  int flags = 0;
+  struct dm_task *dmt = NULL;
+  struct dm_versions *target;
+  struct dm_versions *last_target;
+
+  if (!(dmt = dm_task_create (DM_DEVICE_LIST_VERSIONS)))
+      goto out;
+
+  if (!(dm_task_run (dmt)))
+      goto out;
+
+  target = dm_task_get_versions (dmt);
+
+  do
+    {
+      last_target = target;
+
+      if (strcmp ("crypt", target->name) == 0)
+        {
+          if (target->version[0] >= 1 && target->version[1] >= 17)
+            {
+              /* sector_size supported */
+              flags |= DM_CRYPT_SECTOR_SIZE;
+            }
+        }
+
+      target = (void *) target + target->next;
+    }
+  while (last_target != target);
+
+out:
+  if (dmt)
+      dm_task_destroy (dmt);
+
+  return flags;
+}
+
 static gpointer
 start_encryption (DroidianEncryptionServiceEncryption *self)
 {
@@ -91,9 +136,9 @@ start_encryption (DroidianEncryptionServiceEncryption *self)
   cipher_mode = droidian_encryption_service_config_get_cipher_mode (self->config);
 
   luks2_params = (struct crypt_params_luks2) {
-    .sector_size = 4096,
     .data_device = data_device,
   };
+
   params = (struct crypt_params_reencrypt) {
     .resilience = "checksum",
     .hash = "sha256",
@@ -109,6 +154,20 @@ start_encryption (DroidianEncryptionServiceEncryption *self)
   /* Set offset */
   if ((result = crypt_set_data_offset (self->crypt_device, 0)) < 0)
       goto out;
+
+  /* Set sector_size, ensure we keep supporting older kernels */
+  if (get_supported_features () & DM_CRYPT_SECTOR_SIZE)
+    {
+      /* Use the user specified sector_size (default is 4096) */
+      luks2_params.sector_size = droidian_encryption_service_config_get_sector_size (self->config);
+    }
+  else
+    {
+      /* Unable to get flags, or sector_size not supported */
+      g_warning ("Sector size is not supported by the running kernel, fallbacking to 512");
+      luks2_params.sector_size = 512;
+    }
+
 
   /* Format header */
   if ((result = crypt_format (self->crypt_device, CRYPT_LUKS2, cipher,

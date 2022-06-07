@@ -16,6 +16,7 @@ droidian_encryption_service_deps = [
   dependency('gio-unix-2.0'),
   dependency('libcryptsetup'),
   dependency('polkit-gobject-1'),
+  dependency('devmapper'),
 ]
 
 executable('droidian-encryption-service', droidian_encryption_service_sources,
