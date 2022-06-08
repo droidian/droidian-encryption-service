@@ -56,6 +56,20 @@
     return result_integer; \
   }
 
+#define CREATE_CONFIG_GET_BOOLEAN(KEY, DEFAULT) \
+  gboolean \
+  droidian_encryption_service_config_get_##KEY (DroidianEncryptionServiceConfig *self) \
+  { \
+    g_autoptr(GError) error = NULL; \
+    gint result_boolean = droidian_encryption_service_config_get_boolean (self, CONFIGURATION_FILE_SECTION, \
+                                                                          #KEY, &error); \
+    if (error != NULL) { \
+      g_printerr ("Unable to get key " #KEY ": %s\n", error->message); \
+      result_boolean = DEFAULT; \
+    } \
+    return result_boolean; \
+  }
+
 #include "config.h"
 
 struct _DroidianEncryptionServiceConfig
@@ -91,6 +105,19 @@ droidian_encryption_service_config_get_integer (DroidianEncryptionServiceConfig 
     g_error ("DROIDIAN_ENCRYPTION_SERVICE_IS_CONFIG() failed");
 
   return g_key_file_get_integer (self->key_file, section, key, error);
+}
+
+static gboolean
+droidian_encryption_service_config_get_boolean (DroidianEncryptionServiceConfig *self,
+                                                const char                      *section,
+                                                const char                      *key,
+                                                GError                         **error)
+{
+  if (!DROIDIAN_ENCRYPTION_SERVICE_IS_CONFIG (self))
+    /* Programmer error */
+    g_error ("DROIDIAN_ENCRYPTION_SERVICE_IS_CONFIG() failed");
+
+  return g_key_file_get_boolean (self->key_file, section, key, error);
 }
 
 CREATE_CONFIG_GET_STRING  (header_device, DEFAULT_HEADER);
