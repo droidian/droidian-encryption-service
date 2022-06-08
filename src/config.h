@@ -36,6 +36,7 @@ char *droidian_encryption_service_config_get_mapped_name (DroidianEncryptionServ
 char *droidian_encryption_service_config_get_cipher (DroidianEncryptionServiceConfig *self);
 char *droidian_encryption_service_config_get_cipher_mode (DroidianEncryptionServiceConfig *self);
 gint  droidian_encryption_service_config_get_sector_size (DroidianEncryptionServiceConfig *self);
+gboolean  droidian_encryption_service_config_get_sector_size_force (DroidianEncryptionServiceConfig *self);
 
 G_END_DECLS
 
