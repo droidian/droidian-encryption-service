@@ -157,7 +157,8 @@ start_encryption (DroidianEncryptionServiceEncryption *self)
       goto out;
 
   /* Set sector_size, ensure we keep supporting older kernels */
-  if (get_supported_features () & DM_CRYPT_SECTOR_SIZE)
+  if (droidian_encryption_service_config_get_sector_size_force (self->config) ||
+      get_supported_features () & DM_CRYPT_SECTOR_SIZE)
     {
       /* Use the user specified sector_size (default is 4096) */
       luks2_params.sector_size = droidian_encryption_service_config_get_sector_size (self->config);
