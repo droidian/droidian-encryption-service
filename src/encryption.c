@@ -176,6 +176,12 @@ start_encryption (DroidianEncryptionServiceEncryption *self)
                              cipher_mode, NULL, NULL, 512 / 8, &luks2_params)) < 0)
       goto out;
 
+  /* Set persistent activation flags */
+  if ((result = crypt_persistent_flags_set (self->crypt_device, CRYPT_FLAGS_ACTIVATION,
+                                            CRYPT_ACTIVATE_ALLOW_DISCARDS)) < 0)
+      /* Not fatal */
+      g_printerr ("Unable to set ALLOW_DISCARDS activation flag: %s\n", g_strerror (result * -1));
+
   /* Create volume key */
   if ((result = crypt_keyslot_add_by_volume_key (self->crypt_device, CRYPT_ANY_SLOT, NULL,
                                                 0, self->passphrase, strlen (self->passphrase))) < 0)
