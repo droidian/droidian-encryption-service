@@ -209,6 +209,12 @@ out:
 
   droidian_encryption_service_dbus_encryption_set_status (dbus_encryption,
                                                           (int) encryption_status);
+
+  if (self->crypt_device) {
+      crypt_free (self->crypt_device);
+      self->crypt_device = NULL;
+  }
+
   g_free (self->passphrase);
   self->passphrase = NULL;
   g_mutex_unlock (&self->encryption_process_mutex);
