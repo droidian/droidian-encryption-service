@@ -309,9 +309,17 @@ handle_refresh_status (DroidianEncryptionServiceDbusEncryption *dbus_encryption,
       encryption_status = DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_UNSUPPORTED;
       goto save;
     }
-  
-  if (!self->crypt_device && open_device (self, header_name) < 0)
-      goto cleanup;
+
+  if (!self->crypt_device)
+    {
+      if (open_device (self, header_name) < 0)
+        /* Don't nag as encryption might be unconfigured */
+        goto cleanup;
+
+      if (crypt_load (self->crypt_device, CRYPT_LUKS2, NULL) < 0)
+        /* Just warn */
+        g_warning ("Unable to crypt_load() header");
+    }
 
   cryptsetup_crypt_status = crypt_status (self->crypt_device, mapped_name);
 
