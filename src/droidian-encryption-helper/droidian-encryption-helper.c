@@ -103,7 +103,7 @@ error:
                DROIDIAN_ENCRYPTION_HELPER_FAILED_REENCRYPTION_RUN,
                "Unable to start reencryption on %s: %s",
                crypt_get_device_name (crypt_device),
-               g_strerror (result * -1));
+               g_strerror (-result));
   return FALSE;
 }
 
@@ -152,7 +152,7 @@ activate (struct crypt_device *crypt_device,
                    DROIDIAN_ENCRYPTION_HELPER_FAILED_TO_LOAD,
                    "Unable to crypto_load() on device %s: %s",
                    crypt_get_device_name (crypt_device),
-                   g_strerror (result * -1));
+                   g_strerror (-result));
       return FALSE;
     }
 
@@ -165,7 +165,7 @@ activate (struct crypt_device *crypt_device,
                    DROIDIAN_ENCRYPTION_HELPER_FAILED_TO_ACTIVATE,
                    "Unable to activate device %s: %s",
                    crypt_get_device_name (crypt_device),
-                   g_strerror (result * -1));
+                   g_strerror (-result));
       return FALSE;
     }
 
@@ -302,7 +302,7 @@ main (gint   argc,
       g_set_error (&error, DROIDIAN_ENCRYPTION_HELPER_ERROR,
                    DROIDIAN_ENCRYPTION_HELPER_FAILED_TO_INIT,
                    "Unable to init context: %s",
-                   g_strerror (result * -1));
+                   g_strerror (-result));
       goto out;
     }
 

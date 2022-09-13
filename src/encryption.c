@@ -180,7 +180,7 @@ start_encryption (DroidianEncryptionServiceEncryption *self)
   if ((result = crypt_persistent_flags_set (self->crypt_device, CRYPT_FLAGS_ACTIVATION,
                                             CRYPT_ACTIVATE_ALLOW_DISCARDS)) < 0)
       /* Not fatal */
-      g_printerr ("Unable to set ALLOW_DISCARDS activation flag: %s\n", g_strerror (result * -1));
+      g_printerr ("Unable to set ALLOW_DISCARDS activation flag: %s\n", g_strerror (-result));
 
   /* Create volume key */
   if ((result = crypt_keyslot_add_by_volume_key (self->crypt_device, CRYPT_ANY_SLOT, NULL,
@@ -199,7 +199,7 @@ start_encryption (DroidianEncryptionServiceEncryption *self)
 out:
   if (result < 0)
     {
-      g_warning ("Unable to start encryption: %s", g_strerror (result * -1));
+      g_warning ("Unable to start encryption: %s", g_strerror (-result));
       encryption_status = DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_FAILED;
     }
   else
