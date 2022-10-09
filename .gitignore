@@ -1,1 +1,4 @@
 build/
+
+# Added by Droidian
+!.circleci/
