@@ -30,14 +30,6 @@
 #define DROIDIAN_ENCRYPTION_HELPER_FAILURE "/run/droidian-encryption-helper-failed"
 #define DROIDIAN_ENCRYPTION_SUPPORTED_STAMP "/usr/lib/droidian/device/encryption-supported"
 
-/* Workaround for the ancient polkit build in Debian */
-#ifndef PolkitAuthorizationResult_autoptr
-G_DEFINE_AUTOPTR_CLEANUP_FUNC (PolkitAuthorizationResult, g_object_unref)
-#endif /* PolkitAuthorizationResult_autoptr */
-#ifndef PolkitSubject_autoptr
-G_DEFINE_AUTOPTR_CLEANUP_FUNC (PolkitSubject, g_object_unref)
-#endif /* PolkitSubject_autoptr */
-
 enum {
   DM_CRYPT_SECTOR_SIZE = 1 << 0,
 };
