@@ -28,6 +28,7 @@
 
 #define DROIDIAN_ENCRYPTION_HELPER_PIDFILE "/run/droidian-encryption-helper.pid"
 #define DROIDIAN_ENCRYPTION_HELPER_FAILURE "/run/droidian-encryption-helper-failed"
+#define DROIDIAN_ENCRYPTION_SUPPORTED_STAMP "/usr/lib/droidian/device/encryption-supported"
 
 /* Workaround for the ancient polkit build in Debian */
 #ifndef PolkitAuthorizationResult_autoptr
@@ -304,7 +305,9 @@ handle_refresh_status (DroidianEncryptionServiceDbusEncryption *dbus_encryption,
   data_name = droidian_encryption_service_config_get_data_device (self->config);
   mapped_name = droidian_encryption_service_config_get_mapped_name (self->config);
 
-  if (access (header_name, F_OK) != 0 || access (data_name, F_OK) != 0)
+  if (access (header_name, F_OK) != 0 ||
+      access (data_name, F_OK) != 0 ||
+      access (DROIDIAN_ENCRYPTION_SUPPORTED_STAMP, F_OK) != 0)
     {
       encryption_status = DROIDIAN_ENCRYPTION_SERVICE_ENCRYPTION_STATUS_UNSUPPORTED;
       goto save;
