@@ -17,6 +17,7 @@
  */
 
 #include <glib.h>
+#include <glib-unix.h>
 #include <stdlib.h>
 
 #include "dbus.h"
