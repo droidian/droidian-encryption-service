@@ -558,9 +558,8 @@ droidian_encryption_service_dbus_encryption_interface_init (DroidianEncryptionSe
 }
 
 static void
-droidian_encryption_service_encryption_init (DroidianEncryptionServiceEncryption *self)
+droidian_encryption_service_encryption_init (DroidianEncryptionServiceEncryption *self __attribute__((unused)))
 {
-  (void) self;
 }
 
 DroidianEncryptionServiceEncryption *

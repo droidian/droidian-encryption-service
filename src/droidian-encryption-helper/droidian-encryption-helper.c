@@ -60,13 +60,10 @@ G_DEFINE_QUARK (droidian-encryption-helper-error-quark, droidian_encryption_help
 static gboolean teardown = FALSE;
 
 gint
-report_reencryption_status (uint64_t size, uint64_t offset, void *data)
+report_reencryption_status (uint64_t size __attribute__((unused)),
+                            uint64_t offset __attribute__((unused)),
+                            void     *data __attribute__((unused)))
 {
-  /* Silence warnings */
-  (void) size;
-  (void) offset;
-  (void) data;
-
   /* TODO: Add a way to show progress */
   return teardown ? 1 : 0;
 }

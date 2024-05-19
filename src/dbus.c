@@ -57,9 +57,9 @@ on_bus_acquired (GDBusConnection *connection,
 }
 
 static void
-on_name_acquired (GDBusConnection *connection,
-                  const gchar     *name,
-                  DroidianEncryptionServiceDbus      *self)
+on_name_acquired (GDBusConnection               *connection __attribute__((unused)),
+                  const gchar                   *name,
+                  DroidianEncryptionServiceDbus *self)
 {
   g_return_if_fail (DROIDIAN_ENCRYPTION_SERVICE_IS_DBUS (self));
 
@@ -67,9 +67,9 @@ on_name_acquired (GDBusConnection *connection,
 }
 
 static void
-on_name_lost (GDBusConnection *connection,
-              const gchar     *name,
-              DroidianEncryptionServiceDbus      *self)
+on_name_lost (GDBusConnection               *connection __attribute__((unused)) ,
+              const gchar                   *name,
+              DroidianEncryptionServiceDbus *self)
 {
   g_return_if_fail (DROIDIAN_ENCRYPTION_SERVICE_IS_DBUS (self));
 
@@ -188,7 +188,7 @@ droidian_encryption_service_dbus_class_init (DroidianEncryptionServiceDbusClass 
 }
 
 static void
-droidian_encryption_service_dbus_init (DroidianEncryptionServiceDbus *self)
+droidian_encryption_service_dbus_init (DroidianEncryptionServiceDbus *self __attribute__((unused)))
 {
 }
 

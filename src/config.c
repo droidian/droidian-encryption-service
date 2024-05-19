@@ -167,9 +167,8 @@ droidian_encryption_service_config_class_init (DroidianEncryptionServiceConfigCl
 }
 
 static void
-droidian_encryption_service_config_init (DroidianEncryptionServiceConfig *self)
+droidian_encryption_service_config_init (DroidianEncryptionServiceConfig *self __attribute__((unused)))
 {
-  (void) self;
 }
 
 DroidianEncryptionServiceConfig *
