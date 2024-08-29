@@ -55,7 +55,7 @@ the device's `userdata` this way:
 ```
 userdata (LVM PV)
 \__ droidian (LVM VG)
-    \__ droidian-persistent (LVM LV, 16M, empty)
+    \__ droidian-persistent (LVM LV, 128M, empty)
     \__ droidian-reserved   (LVM LV, 32M. empty)
     \__ droidian-rootfs     (LVM LV, rest, contains the actual Droidian rootfs)
 ```
